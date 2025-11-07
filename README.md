@@ -11,11 +11,14 @@ interested in learning Cobol can study the code without any inconvenience.
 ```mermaid
 flowchart
 
-db('Library Reymon Database')
-core('Library Reymon Core')
-main('main.cbl')
+db("Library Reymon Database")
+core("Library Reymon Core")
+main("main.cbl")
 
 db --> libreydb.a
 core --> libreycore.a
 main --> main.o
+
+libreydb.a & libreycore.a & main.o --> cob2 --> rcbs
+
 ```
