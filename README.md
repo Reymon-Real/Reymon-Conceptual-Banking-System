@@ -15,11 +15,11 @@ db("Library Reymon Database")
 core("Library Reymon Core")
 main("main.cbl")
 
-db --> cob2 --> ar --> libreydb.a
-core --> cob2 --> ar --> libreycore.a
+db --> cob2.1(cob2) --> ar.1(ar) --> libreydb.a
+core --> cob2.2(cob2) --> ar.2(ar) --> libreycore.a
 main --> main.o
 
-libreydb.a & libreycore.a & main.o --> cob2 --> rcbs
+libreydb.a & libreycore.a & main.o --> cob2.3(cob2) --> rcbs
 
 ```
 
