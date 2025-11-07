@@ -26,7 +26,14 @@ libreydb.a & libreycore.a & main.o --> cob2.3(cob2) --> rcbs
 ## Operation of the Reymon database library (libreydb)
 
 ```mermaid
-flowchart
+flowchart LR
 
-REYDB_INIT("Reymon Database Init Function \(REYDB\-INIT\)")
+REYDB[(Reymon Database)]
+
+REYDB_INIT(("REYDB\-INIT"))
+
+REYDB.DAT("Reymon Database Data \(reydb.dat\)")
+
+REYDB_INT -- Create the reydb.dat file and configure all physical space --> REYDB.DAT
+
 ```
