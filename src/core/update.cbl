@@ -1,0 +1,14 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. REYDB-UPDATE.
+
+       AUTHOR. EDUARDO POZOS HUERTA
+       
+       ENVIRONMENT DIVISION.
+
+       DATA DIVISION.
+
+       PROCEDURE DIVISION.
+           
+           DISPLAY 'Hello from REYDB-UPDATE'
+
+           GOBACK.
