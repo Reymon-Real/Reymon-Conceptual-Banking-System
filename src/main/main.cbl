@@ -6,7 +6,7 @@
       *** Author: Eduardo Pozos Huerta ***
       *** File: main.cbl               ***
       *** Date: 11/03/2025             ***
-      *** Update: 11/05/2025           ***
+      *** Update: 11/07/2025           ***
       ************************************
       
       ***************************
@@ -18,7 +18,7 @@
        
        AUTHOR. EDUARDO POZOS HUERTA.
        DATE-WRITTEN. 11/03/2025.
-       DATE-COMPILED. 11/05/2025.
+       DATE-COMPILED. 11/07/2025.
 
        ENVIRONMENT DIVISION.
 
@@ -32,6 +32,14 @@
        COPY "reydb-file.cbl".
 
        WORKING-STORAGE SECTION.
+
+       01 OPERATIONS.
+           05 OPERATION-ADD      PIC A(23) VALUE SPACE.
+           05 OPERATION-REMOVE   PIC A(26) VALUE SPACE.
+           05 OPERATION-CHECK    PIC A(22) VALUE SPACE.
+           05 OPERATION-TRANSFER PIC A(31) VALUE SPACE.
+           05 OPERATION-DEPOSIT  PIC A(31) VALUE SPACE.
+           05 OPERATION-INPUT    PIC A(64) VALUE SPACE.
 
        01 DISPLAY-OPTIONS.
            05 DISPLAY-NAME        PIC A(15) VALUE "Enter your name".
@@ -58,15 +66,41 @@
       *************************************
 
            CALL "REYDB-INIT".
+
+      ***********************************
+      *** Initialize Global Variables ***
+      ***********************************
+
+           MOVE "1) Add user to database"         TO OPERATION-ADD.
+           MOVE "2) Remove user to database"      TO OPERATION-REMOVE.
+           MOVE "3) Check account money"          TO OPERATION-CHECK.
+           MOVE "4) Transfer money to other user" TO OPERATION-TRANSFER.
+           MOVE "5) Deposit Money to the account" TO OPERATION-DEPOSIT.
       
       *********************
       *** Program Logic ***
       *********************
-      
-           PERFORM ENTER-DATA.
-           PERFORM VERIFY-DATA.
 
-           CALL "REYDB-ADD" USING REYDB-WORKING-TABLE.
+       PROGRAM-LOGIC.
+
+           DISPLAY OPERATION-ADD.
+           DISPLAY OPERATION-REMOVE.
+           DISPLAY OPERATION-CHECK.
+           DISPLAY OPERATION-TRANSFER.
+           DISPLAY OPERATION-DEPOSIT.
+
+           DISPLAY "Operation: " ACCEPT OPERATION-INPUT.
+           
+           IF OPERATION-INPUT = "1" OR OPERATION-INPUT = "Add"
+               PERFORM ENTER-DATA
+               PERFORM VERIFY-DATA
+           END-IF
+
+           IF OPERATION-INPUT = "EXIT" OR OPERATION-INPUT = "exit"
+               STOP RUN
+           END-IF
+
+           GO TO PROGRAM-LOGIC.
 
       *******************
       *** End Program ***
