@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. main.
+       PROGRAM-ID. rcbs_account_write IS INITIAL.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 17. August. 2026
@@ -8,34 +8,34 @@
 
       *****************************************************************
        ENVIRONMENT DIVISION.
+
+       INPUT-OUTPUT SECTION.
+
+       FILE-CONTROL.
+       COPY "account/fc.cpy".
       *****************************************************************
 
       *****************************************************************
        DATA DIVISION.
 
+       FILE SECTION.
+       COPY "account/fs.cpy".
+
        WORKING-STORAGE SECTION.
        COPY "account/ws.cpy".
-       COPY "register/bank/ws.cpy".
-       COPY "register/cnbv/ws.cpy".
-       77 a pic a value "a".
-       77 b pic a value "b".
+
+       LINKAGE SECTION.
+       COPY "account/ls.cpy".
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION.
-       MAIN-CONTROL.
+       PROCEDURE DIVISION USING LS-RCBS-ACCOUNT.
 
-           PERFORM INIT-PROGRAM.
-           PERFORM REGULATOR-REPORT.
+           OPEN I-O RCBS-ACCOUNT-DF.
+              
+              WRITE FS-RCBS-ACCOUNT FROM LS-RCBS-ACCOUNT.
 
-           STOP RUN.
+           CLOSE RCBS-ACCOUNT-DF.
 
-       INIT-PROGRAM.
-           CALL "rcbs_account_open".
-           
-
-       REGULATOR-REPORT.
-           CALL "rcbs_report_cnbv_R01_A0111"
-                  USING a b
-           END-CALL.
-      *****************************************************************
+           GOBACK.
+      *****************************************************************s

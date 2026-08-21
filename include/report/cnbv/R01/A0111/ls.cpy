@@ -1,10 +1,12 @@
       * ###################################
       * ### Autor: Eduardo Pozos Huerta ###
-      * ### Datum: 17. August. 2026     ###
-      * ### Aktua: 17. August. 2026     ###
+      * ### Datum: 20. August. 2026     ###
+      * ### Aktua: 20. August. 2026     ###
       * ### Lizenz: MIT                 ###
       * ###################################
 
       *****************************************************************
-       77 WS-CNBV-FST PIC X(02) DISPLAY.
+       77 LS-REPORT-CNBV-DF-NAME PIC X(255) DISPLAY.
+
+       77 LS-REPORT-CNBV-R01-A-0111 PIC X(01) DISPLAY.
       *****************************************************************

@@ -1,48 +1,46 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_account_open IS INITIAL.
+       PROGRAM-ID. rcbs_report_cnbv_R01_A0111.
        AUTHOR. Reymon Dev.
-       DATE-WRITTEN.  18. April. 2026
-       DATE-COMPILED. 17. August. 2026
+       DATE-WRITTEN.  20. August. 2026
+       DATE-COMPILED. 20. August. 2026
       *****************************************************************
 
       *****************************************************************
        ENVIRONMENT DIVISION.
 
        INPUT-OUTPUT SECTION.
-
        FILE-CONTROL.
-       COPY "account/fc.cpy".
+       COPY "report/cnbv/R01/A0111/fc.cpy".
       *****************************************************************
 
       *****************************************************************
        DATA DIVISION.
 
        FILE SECTION.
-       COPY "account/fs.cpy".
+       COPY "report/cnbv/R01/A0111/fs.cpy".
 
        WORKING-STORAGE SECTION.
-       COPY "account/ws.cpy".
+       COPY "report/cnbv/R01/A0111/ws.cpy".
 
        LINKAGE SECTION.
-       COPY "account/ls.cpy".
-      *****************************************************************
+       01 LS-FILE-STATUS PIC X(02) DISPLAY.
+       COPY "report/cnbv/R01/A0111/ls.cpy".
 
       *****************************************************************
-       PROCEDURE DIVISION.
 
-           OPEN I-O RCBS-ACCOUNT-DF.
+      *****************************************************************
+       PROCEDURE DIVISION
+          USING LS-REPORT-CNBV-DF-NAME LS-REPORT-CNBV-R01-A-0111
+          RETURNING LS-FILE-STATUS.
 
-           IF WS-RCBS-ACCOUNT-FST EQUAL "00"
-           
-              CLOSE RCBS-ACCOUNT-DF
-           
-           ELSE
-           
-              OPEN OUTPUT RCBS-ACCOUNT-DF
-              CLOSE RCBS-ACCOUNT-DF
-           
-           END-IF.
+           OPEN OUTPUT REPORT-CNBV-R01-A-0111-DF.
+
+               
+
+           CLOSE REPORT-CNBV-R01-A-0111-DF.
+
+           MOVE WS-REPORT-CNBV-R01-A-0111-FST TO LS-FILE-STATUS.
 
            GOBACK.
       *****************************************************************
