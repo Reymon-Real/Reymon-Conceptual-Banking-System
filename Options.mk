@@ -9,12 +9,11 @@
 ### Compile Options ###
 #######################
 
-ARCH   := x86_64
-SYSTEM := linux
-
-PREFIX    := /usr/local
+ARCH      := x86_64
+SYSTEM    := linux
 BUILDTYPE := debug
 
+PREFIX    := /usr/local
 BUILDDIR  := ./build/$(BUILDTYPE)/$(SYSTEM)/$(ARCH)
 SOURCEDIR := ./src
 

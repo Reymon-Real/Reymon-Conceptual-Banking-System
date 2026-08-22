@@ -11,14 +11,14 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       COPY "register/bank/file_control.cpy".
+       COPY "register/bank/fc.cpy".
       *****************************************************************
 
       *****************************************************************
        DATA DIVISION.
 
        FILE SECTION.
-       COPY "register/bank/file_section.cpy".
+       COPY "register/bank/fs.cpy".
 
        WORKING-STORAGE SECTION.
        COPY "register/bank/ws.cpy".

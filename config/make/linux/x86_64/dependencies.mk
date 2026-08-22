@@ -44,7 +44,8 @@ endif
 DEPENDENCIES_FILES_EXECUTABLE_RCBS := \
 $(foreach \
 	FILE, \
-	$(BINARY_LIBRARY_SHARED_SYMLINK_RCBS), \
+	$(SYMLINK_LIBRARY_SHARED_RCBS) \
+	libgcobol.so, \
 	-l:$(notdir $(FILE)) \
 )
 

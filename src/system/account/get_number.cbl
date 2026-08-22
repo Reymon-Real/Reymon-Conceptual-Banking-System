@@ -23,7 +23,7 @@
 
        WORKING-STORAGE SECTION.
        COPY "account/ws.cpy".
-       COPY "account/getoper.cpy".
+       COPY "account/ws.getoper.cpy".
 
        77 WS-LAST-ID PIC 9(18) COMP-5.
 
@@ -31,7 +31,7 @@
        COPY "account/ls.cpy".
 
        77 LS-LAST-ID PIC 9(18) COMP-5.
-       77 LS-ACCOUNT-OPERATION PIC A(10) DISPLAY.
+       77 LS-ACCOUNT-OPERATION PIC X(10) DISPLAY.
       *****************************************************************
 
       *****************************************************************
@@ -39,65 +39,55 @@
        USING     LS-ACCOUNT-OPERATION
        RETURNING LS-LAST-ID.
 
+           MOVE LS-ACCOUNT-OPERATION TO WS-GET-ACCOUNT-OPERRATION.
+
            OPEN INPUT RCBS-ACCOUNT-DF.
               
-              EVALUATE LS-ACCOUNT-OPERATION
-              
-                 WHEN ENUM-GET-ACC-LA
+              *> Get Last Account ID
+              IF GET-ACCOUNT-LAST-ACCOUNT THEN
                     
-                    MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
+                 MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
                     
-                    START RCBS-ACCOUNT-DF
-                    
-                       KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
-                    
+                 START RCBS-ACCOUNT-DF
+                    KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
                        INVALID KEY
-                          MOVE ZERO TO LS-LAST-ID
-                    
-                    END-START
+                       MOVE ZERO TO LS-LAST-ID
+                 END-START
 
-                    IF WS-RCBS-ACCOUNT-FST EQUAL "00"
-                       
-                       READ RCBS-ACCOUNT-DF PREVIOUS
-                          AT END
-                          
-                             MOVE ZEROS TO LS-LAST-ID
-                          
-                          NOT AT END
-                             MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
-
-                          END-READ
-                    
-                    END-IF
+                 IF WS-RCBS-ACCOUNT-FST EQUAL "00"
+                    READ RCBS-ACCOUNT-DF PREVIOUS
+                       AT END
+                          MOVE ZEROS TO LS-LAST-ID
+                       NOT AT END
+                          MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
+                    END-READ
+                 END-IF
                   
-                 WHEN ENUM-GET-ACC-AN
+              END-IF.
 
-                    MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
-                    
-                    START RCBS-ACCOUNT-DF
-                    
-                       KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
-                    
+              *> Get Next account number available
+              IF GET-ACCOUNT-AVAILABLE-NUMBER THEN
+
+                 MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
+
+                 START RCBS-ACCOUNT-DF
+                    KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
                        INVALID KEY
                           MOVE ZERO TO LS-LAST-ID
-                    
-                    END-START
+                 END-START
 
-                    IF WS-RCBS-ACCOUNT-FST EQUAL "00"
-                       
-                       READ RCBS-ACCOUNT-DF PREVIOUS
-                          AT END
-                          
-                             MOVE ZEROS TO LS-LAST-ID
-                          
-                          NOT AT END
-                             MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
+                 IF WS-RCBS-ACCOUNT-FST EQUAL "00"
+                    READ RCBS-ACCOUNT-DF PREVIOUS
+                       AT END
+                          MOVE ZEROS TO LS-LAST-ID
 
-                          END-READ
-                    
-                    END-IF
-              
-              END-EVALUATE.
+                       NOT AT END
+                          MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
+                          ADD 1 TO LS-LAST-ID
+                    END-READ
+                 END-IF
+
+              END-IF.
 
            CLOSE RCBS-ACCOUNT-DF.
 

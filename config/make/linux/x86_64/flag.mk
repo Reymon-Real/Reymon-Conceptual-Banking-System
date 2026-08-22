@@ -9,7 +9,7 @@
 ### Compilers ###
 #################
 
-COBFLAGS := -Wextra -Wpedantic $(INCLUDE_DIR) -fPIC
+COBFLAGS := -m64 -Wextra -Wuninitialized -Wpedantic -ffixed-form $(INCLUDE_DIR) -fPIC
 
 ###############
 ### Linkers ###
@@ -21,8 +21,9 @@ COBLDFLAGS := -Wl,--warn-once
 ### Utilities ###
 #################
 
-ARFLAGS := rcs
-LNFLAGS := -sf
+ARFLAGS    := rcs
+LNFLAGS    := -sf
+STRIPFLAGS := --strip-debug --discard-all
 
 #########################
 ### Conditional Flags ###
@@ -35,6 +36,6 @@ COBFLAGS += -g -Og
 else ifeq ($(BUILDTYPE), release)
 
 COBFLAGS   += -O3
-COBLDFLAGS += --strip-local --strip-discarded
+COBLDFLAGS += -Wl,--strip-debug -Wl,--strip-discarded -Wl,--discard-all -flto -flto=$(shell nproc)
 
 endif

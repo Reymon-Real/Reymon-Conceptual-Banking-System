@@ -9,7 +9,7 @@
 ### Main File ###
 #################
 
-$(OBJECT_FILE_MAIN): $(SOURCE_FILE_MAIN) | $(HEADER_FILE_RCBS)
+$(OBJECT_FILE_MAIN): $(SOURCE_FILE_MAIN) $(HEADER_FILE_RCBS)
 	@mkdir -p $(dir $@)
 	$(COB) $(COBFLAGS) -c $< -o $@
 
@@ -17,9 +17,20 @@ $(OBJECT_FILE_MAIN): $(SOURCE_FILE_MAIN) | $(HEADER_FILE_RCBS)
 ### Static Libraries ###
 ########################
 
+ifeq ($(BUILDTYPE), debug)
+
 $(BINARY_LIBRARY_STATIC_RCBS): $(OBJECT_FILES_SYSTEM)
 	@mkdir -p $(dir $@)
 	$(AR) $(ARFLAGS) -o $@ $^
+
+else ifeq ($(BUILDTYPE), release)
+
+$(BINARY_LIBRARY_STATIC_RCBS): $(OBJECT_FILES_SYSTEM)
+	@mkdir -p $(dir $@)
+	$(AR) $(ARFLAGS) -o $@ $^
+	$(STRIP) $(STRIPFLAGS) $@
+
+endif
 
 ########################
 ### Shared Libraries ###
@@ -27,13 +38,13 @@ $(BINARY_LIBRARY_STATIC_RCBS): $(OBJECT_FILES_SYSTEM)
 
 $(BINARY_LIBRARY_SHARED_VERSION_RCBS): $(OBJECT_FILES_SYSTEM)
 	@mkdir -p $(dir $@)
-	$(COB) $(COBFLAGS) -shared -Wl,-soname=$(notdir $@) -o $@ $^
+	$(COBLD) $(COBLDFLAGS) -shared -Wl,-soname=$(notdir $@) -o $@ $^
 
-$(BINARY_LIBRARY_SHARED_SOVERSION_RCBS): $(BINARY_LIBRARY_SHARED_VERSION_RCBS)
+$(SYMLINK_LIBRARY_SHARED_SOVERSION_RCBS): $(BINARY_LIBRARY_SHARED_VERSION_RCBS)
 	@mkdir -p $(dir $@)
 	$(LN) $(LNFLAGS) $(notdir $<) $@
 
-$(BINARY_LIBRARY_SHARED_SYMLINK_RCBS): $(BINARY_LIBRARY_SHARED_SOVERSION_RCBS)
+$(SYMLINK_LIBRARY_SHARED_RCBS): $(SYMLINK_LIBRARY_SHARED_SOVERSION_RCBS)
 	@mkdir -p $(dir $@)
 	$(LN) $(LNFLAGS) $(notdir $<) $@
 
@@ -41,6 +52,6 @@ $(BINARY_LIBRARY_SHARED_SYMLINK_RCBS): $(BINARY_LIBRARY_SHARED_SOVERSION_RCBS)
 ### Executable ###
 ##################
 
-$(BINARY_EXECUTABLE_RCBS): $(OBJECT_FILE_MAIN) | $(BINARY_LIBRARY_SHARED_SYMLINK_RCBS)
+$(BINARY_EXECUTABLE_RCBS): $(OBJECT_FILE_MAIN) $(SYMLINK_LIBRARY_SHARED_RCBS)
 	@mkdir -p $(dir $@)
 	$(COBLD) $(COBLDFLAGS) -o $@ $< $(DEPENDENCIES_EXECUTABLE_RCBS)

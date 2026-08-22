@@ -21,5 +21,6 @@ COBLD := x86_64-linux-gnu-gcobol
 ### Utilities ###
 #################
 
-AR := x86_64-linux-gnu-ar
-LN := ln
+AR    := x86_64-linux-gnu-ar
+LN    := ln
+STRIP := x86_64-linux-gnu-strip

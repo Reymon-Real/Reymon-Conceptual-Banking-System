@@ -9,6 +9,6 @@
 ### System Object Patterns ###
 ##############################
 
-$(OBJECT_DIR_SYSTEM)/%.cbl.o: $(SOURCE_DIR_SYSTEM)/%.cbl | $(HEADER_FILES_SYSTEM)
+$(OBJECT_DIR_SYSTEM)/%.cbl.o: $(SOURCE_DIR_SYSTEM)/%.cbl $(HEADER_FILES_SYSTEM)
 	@mkdir -p $(dir $@)
 	$(COB) $(COBFLAGS) -c $< -o $@

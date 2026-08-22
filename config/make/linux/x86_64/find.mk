@@ -9,7 +9,7 @@
 ### Search Headers Files ###
 ############################
 
-HEADER_FILES_SYSTEM := $(wildcard include/**/*.cpy)
+HEADER_FILES_SYSTEM := $(shell find include/*/* -type f -name '*.cpy')
 
 ###########################
 ### Search Source Files ###
