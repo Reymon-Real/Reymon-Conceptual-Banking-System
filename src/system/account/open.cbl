@@ -23,10 +23,13 @@
 
        LOCAL-STORAGE SECTION.
        COPY "account/ws.cpy".
+
+       LINKAGE SECTION.
+       COPY "account/lk.cpy".
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION.
+       PROCEDURE DIVISION USING LK-ACCOUNT-DF-NAME.
 
            OPEN I-O ACCOUNT-DF.
 

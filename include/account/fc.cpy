@@ -6,7 +6,7 @@
       * ###################################
 
            SELECT OPTIONAL ACCOUNT-DF
-           ASSIGN TO "test/account.db"
+           ASSIGN TO LK-ACCOUNT-DF-NAME
            ORGANIZATION IS INDEXED
            ACCESS IS DYNAMIC
            RECORD KEY IS RK-ACCOUNT-NUMBER

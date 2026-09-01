@@ -36,7 +36,7 @@
 
       *****************************************************************
        PROCEDURE DIVISION
-       USING     LK-ACCOUNT-OPERATION
+       USING BY REFERENCE LK-ACCOUNT-DF-NAME LK-ACCOUNT-OPERATION
        RETURNING LK-LAST-ID.
 
            MOVE LK-ACCOUNT-OPERATION TO WS-GET-ACCOUNT-OPERRATION.

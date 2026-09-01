@@ -43,84 +43,52 @@
 
       *****************************************************************
        PROCEDURE DIVISION
-          USING BY REFERENCE LK-TRANSACTION
+          USING BY REFERENCE LK-ACCOUNT-DF-NAME LK-TRANSACTION
           RETURNING LK-STATE.
 
             OPEN I-O ACCOUNT-DF TRANSACTION-DF.
 
-               MOVE LK-TRANSACTION TO WS-TRANSACTION.
-               
-      *****************************************************************
-               EVALUATE TRUE
+            MOVE LK-TRANSACTION TO WS-TRANSACTION.
+            
+            IF NOT WS-TRANSACTION-TYPE-WITHDRAW
 
-               WHEN WS-TRANSACTION-TYPE-DEPOSIT
+              SET LS-STATE-FAILURE TO TRUE
+              MOVE LS-STATE TO LK-STATE
 
-                  PERFORM ACCOUNT-VERIFICATION
+            END-IF.
 
-                  ADD WS-TRANSACTION-AMOUNT TO ARK-ACCOUNT-AMOUNT
-                  REWRITE FS-ACCOUNT
+            MOVE WS-TRANSACTION-ORIGIN-ACCOUNT-FID TO RK-ACCOUNT-NUMBER
 
-      *****************************************************************
-               WHEN WS-TRANSACTION-TYPE-WITHDRAW
+            READ ACCOUNT-DF
+              INVALID KEY
+                SET LS-STATE-FAILURE TO TRUE
+                MOVE LS-STATE TO LK-STATE
+                CLOSE ACCOUNT-DF TRANSACTION-DF
+                GOBACK
+            END-READ.
 
-                  PERFORM ACCOUNT-VERIFICATION
+            MOVE HIGH-VALUES TO RK-TRANSACTION-ID.
 
-                  SUBTRACT WS-TRANSACTION-AMOUNT
-                  FROM ARK-ACCOUNT-AMOUNT
-                  REWRITE FS-ACCOUNT
-               
-      *****************************************************************
-               WHEN WS-TRANSACTION-TYPE-TRANSFER
+            START TRANSACTION-DF KEY IS LESS THAN RK-TRANSACTION-ID
+              INVALID KEY CONTINUE
+            END-START.
 
-                  PERFORM ACCOUNT-VERIFICATION
+            READ TRANSACTION-DF PREVIOUS
+              INVALID KEY
+                MOVE ZERO TO RK-TRANSACTION-ID
+            END-READ.
 
-                  ADD WS-TRANSACTION-AMOUNT TO ARK-ACCOUNT-AMOUNT
-                  REWRITE FS-ACCOUNT
+            ADD 1 TO RK-TRANSACTION-ID.
+            MOVE RK-TRANSACTION-ID TO WS-TRANSACTION-ID.
 
-                  MOVE WS-TRANSACTION-ORIGIN-ACCOUNT-FID
-                  TO RK-ACCOUNT-NUMBER
+            WRITE FS-TRANSACTION FROM WS-TRANSACTION.
 
-                  READ FS-ACCOUNT NOT INVALID KEY CONTINUE
+            ADD WS-TRANSACTION-AMOUNT TO ARK-ACCOUNT-AMOUNT.
+            REWRITE FS-ACCOUNT.
 
-                  SUBTRACT WS-TRANSACTION-AMOUNT
-                  FROM ARK-ACCOUNT-AMOUNT
-                  REWRITE FS-ACCOUNT
-
-               END-EVALUATE.
-      *****************************************************************
+            MOVE LS-STATE TO LK-STATE.
 
             CLOSE ACCOUNT-DF TRANSACTION-DF.
 
            GOBACK.
-
-       ACCOUNT-VERIFICATION.
-         MOVE WS-TRANSACTION-ORIGIN-ACCOUNT-FID TO RK-ACCOUNT-NUMBER
-
-         READ FS-ACCOUNT
-            INVALID KEY
-               SET LS-STATE-FAILURE TO TRUE
-               MOVE LS-STATE TO LK-STATE
-               CLOSE ACCOUNT-DF TRANSACTION-DF
-               GOBACK
-                  
-               NOT INVALID KEY
-                  CONTINUE
-        
-         END-READ
-
-         MOVE WS-TRANSACTION-RECEIVE-ACCOUNT-FID TO RK-ACCOUNT-NUMBER
-
-         READ FS-ACCOUNT
-            INVALID KEY
-               SET LS-STATE-FAILURE TO TRUE
-               MOVE LS-STATE TO LK-STATE
-               CLOSE ACCOUNT-DF TRANSACTION-DF
-               GOBACK
-                  
-            NOT INVALID KEY
-               CONTINUE
-         
-         END-READ
-
-         WRITE FS-TRANSACTION FROM WS-TRANSACTION
       *****************************************************************

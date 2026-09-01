@@ -18,10 +18,14 @@
        COPY "register/bank/ws.cpy".
        COPY "report/cnbv/R01/A0111/ws.cpy".
        
-       01 WS-ACCEPT-PROGRAM PIC 9(03)  VALUE ZERO COMP-5.
-          88 ACCEPT-CREATE-REPORT-CNBV VALUE ZERO.
-          88 ACCEPT-EXIT               VALUE 1.
+       01 WS-ACCEPT-PROGRAM PIC X(04)  VALUE SPACES.
+          88 ACCEPT-CREATE-REPORT-CNBV VALUE "CNBV".
+          88 ACCEPT-EXIT               VALUE "EXIT".
+       
        77 b pic X(001) display.
+
+       77 UBS-ACCOUNT-PEOPLE PIC X(255)
+            VALUE "test/UBS/account/people.db".
       *****************************************************************
 
       *****************************************************************
@@ -37,17 +41,20 @@
                *>MOVE FUNCTION UPPER-CASE(WS-ACCEPT-PROGRAM)
                *>TO WS-ACCEPT-PROGRAM
 
-               EVALUATE WS-ACCEPT-PROGRAM
+               EVALUATE TRUE
 
-                  WHEN 0
+                  WHEN ACCEPT-CREATE-REPORT-CNBV
                      CALL "rcbs_report_cnbv_R01_A0111"
                         USING
                            WS-REPORT-CNBV-DF-NAME
                            b
                      END-CALL
 
-                  WHEN 1
-                     STOP RUN
+                  WHEN OTHER
+
+                     IF NOT ACCEPT-EXIT
+                        DISPLAY "Unrecognized Operation"
+                     END-IF
 
                END-EVALUATE
 
@@ -56,7 +63,7 @@
            STOP RUN.
 
        INIT-PROGRAM.
-           CALL "rcbs_account_open".
+           CALL "rcbs_account_open" USING UBS-ACCOUNT-PEOPLE.
 
            MOVE "test/cnbv/report_" TO WS-REPORT-CNBV-DF-FILE.
            MOVE "_.txt"             TO WS-REPORT-CNBV-DF-EXTENSION.

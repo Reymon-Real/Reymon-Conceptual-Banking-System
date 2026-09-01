@@ -29,7 +29,7 @@
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION USING LK-ACCOUNT.
+       PROCEDURE DIVISION USING LK-ACCOUNT-DF-NAME LK-ACCOUNT.
 
            OPEN I-O ACCOUNT-DF.
               
