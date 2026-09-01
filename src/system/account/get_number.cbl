@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_get_account_number IS INITIAL.
+       PROGRAM-ID. rcbs_get_account_number IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 17. August. 2026
@@ -21,45 +21,45 @@
        FILE SECTION.
        COPY "account/fs.cpy".
 
-       WORKING-STORAGE SECTION.
+       LOCAL-STORAGE SECTION.
        COPY "account/ws.cpy".
        COPY "account/ws.getoper.cpy".
 
        77 WS-LAST-ID PIC 9(18) COMP-5.
 
        LINKAGE SECTION.
-       COPY "account/ls.cpy".
+       COPY "account/lk.cpy".
 
-       77 LS-LAST-ID PIC 9(18) COMP-5.
-       77 LS-ACCOUNT-OPERATION PIC X(10) DISPLAY.
+       77 LK-LAST-ID PIC 9(10)V9(5) COMP-5.
+       77 LK-ACCOUNT-OPERATION PIC X(10) DISPLAY.
       *****************************************************************
 
       *****************************************************************
        PROCEDURE DIVISION
-       USING     LS-ACCOUNT-OPERATION
-       RETURNING LS-LAST-ID.
+       USING     LK-ACCOUNT-OPERATION
+       RETURNING LK-LAST-ID.
 
-           MOVE LS-ACCOUNT-OPERATION TO WS-GET-ACCOUNT-OPERRATION.
+           MOVE LK-ACCOUNT-OPERATION TO WS-GET-ACCOUNT-OPERRATION.
 
-           OPEN INPUT RCBS-ACCOUNT-DF.
+           OPEN INPUT ACCOUNT-DF.
               
               *> Get Last Account ID
               IF GET-ACCOUNT-LAST-ACCOUNT THEN
                     
-                 MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
+                 MOVE HIGH-VALUES TO RK-ACCOUNT-NUMBER
                     
-                 START RCBS-ACCOUNT-DF
-                    KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
+                 START ACCOUNT-DF
+                    KEY IS LESS THAN RK-ACCOUNT-NUMBER
                        INVALID KEY
-                       MOVE ZERO TO LS-LAST-ID
+                       MOVE ZERO TO LK-LAST-ID
                  END-START
 
-                 IF WS-RCBS-ACCOUNT-FST EQUAL "00"
-                    READ RCBS-ACCOUNT-DF PREVIOUS
+                 IF WS-ACCOUNT-FST EQUAL "00"
+                    READ ACCOUNT-DF PREVIOUS
                        AT END
-                          MOVE ZEROS TO LS-LAST-ID
+                          MOVE ZEROS TO LK-LAST-ID
                        NOT AT END
-                          MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
+                          MOVE RK-ACCOUNT-NUMBER TO LK-LAST-ID
                     END-READ
                  END-IF
                   
@@ -68,28 +68,28 @@
               *> Get Next account number available
               IF GET-ACCOUNT-AVAILABLE-NUMBER THEN
 
-                 MOVE HIGH-VALUES TO RK-RCBS-ACCOUNT-NUMBER
+                 MOVE HIGH-VALUES TO RK-ACCOUNT-NUMBER
 
-                 START RCBS-ACCOUNT-DF
-                    KEY IS LESS THAN RK-RCBS-ACCOUNT-NUMBER
+                 START ACCOUNT-DF
+                    KEY IS LESS THAN RK-ACCOUNT-NUMBER
                        INVALID KEY
-                          MOVE ZERO TO LS-LAST-ID
+                          MOVE ZERO TO LK-LAST-ID
                  END-START
 
-                 IF WS-RCBS-ACCOUNT-FST EQUAL "00"
-                    READ RCBS-ACCOUNT-DF PREVIOUS
+                 IF WS-ACCOUNT-FST EQUAL "00"
+                    READ ACCOUNT-DF PREVIOUS
                        AT END
-                          MOVE ZEROS TO LS-LAST-ID
+                          MOVE ZEROS TO LK-LAST-ID
 
                        NOT AT END
-                          MOVE RK-RCBS-ACCOUNT-NUMBER TO LS-LAST-ID
-                          ADD 1 TO LS-LAST-ID
+                          MOVE RK-ACCOUNT-NUMBER TO LK-LAST-ID
+                          ADD 1 TO LK-LAST-ID
                     END-READ
                  END-IF
 
               END-IF.
 
-           CLOSE RCBS-ACCOUNT-DF.
+           CLOSE ACCOUNT-DF.
 
            GOBACK.
       *****************************************************************s

@@ -13,13 +13,13 @@ DEPEND_DIR_BUILD := $(addprefix -L,lib $(MAKE_OUTPUT_LIBDIR))
 
 ifndef MAKE_DIR_BUILD_RPATH
 
-MAKE_DIR_BUILD_RPATH := '$$ORIGIN:$$ORIGIN/lib:$$ORIGIN/../lib'
+MAKE_DIR_BUILD_RPATH := '$$ORIGIN:$$ORIGIN/lib:$$ORIGIN/../lib:/usr/lib:/usr/local/lib:/usr/local/lib64'
 
 endif
 
 ifndef MAKE_DIR_INSTALL_RPATH
 
-MAKE_DIR_INSTALL_RPATH := '$$ORIGIN:$$ORIGIN/lib:$$ORIGIN/../lib:/usr/lib:/usr/local/lib'
+MAKE_DIR_INSTALL_RPATH := '$$ORIGIN:$$ORIGIN/lib:$$ORIGIN/../lib:/usr/lib:/usr/local/lib:/usr/local/lib64'
 
 endif
 
@@ -44,8 +44,7 @@ endif
 DEPENDENCIES_FILES_EXECUTABLE_RCBS := \
 $(foreach \
 	FILE, \
-	$(SYMLINK_LIBRARY_SHARED_RCBS) \
-	libgcobol.so, \
+	$(SYMLINK_LIBRARY_SHARED_RCBS), \
 	-l:$(notdir $(FILE)) \
 )
 

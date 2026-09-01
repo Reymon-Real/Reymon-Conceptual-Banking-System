@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_transaction_deposit.
+       PROGRAM-ID. rcbs_account_transfer IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 18. August. 2026

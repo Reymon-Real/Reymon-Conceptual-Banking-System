@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_transaction_withdraw.
+       PROGRAM-ID. rcbs_account_withdraw IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 18. August. 2026

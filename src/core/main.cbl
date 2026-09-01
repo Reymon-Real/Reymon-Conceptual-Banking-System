@@ -18,7 +18,9 @@
        COPY "register/bank/ws.cpy".
        COPY "report/cnbv/R01/A0111/ws.cpy".
        
-       77 WS-ACCEPT-PROGRAM PIC 9(03) VALUE SPACE.
+       01 WS-ACCEPT-PROGRAM PIC 9(03)  VALUE ZERO COMP-5.
+          88 ACCEPT-CREATE-REPORT-CNBV VALUE ZERO.
+          88 ACCEPT-EXIT               VALUE 1.
        77 b pic X(001) display.
       *****************************************************************
 
@@ -32,8 +34,8 @@
 
                ACCEPT WS-ACCEPT-PROGRAM
 
-               MOVE FUNCTION UPPER-CASE(WS-ACCEPT-PROGRAM)
-               TO WS-ACCEPT-PROGRAM
+               *>MOVE FUNCTION UPPER-CASE(WS-ACCEPT-PROGRAM)
+               *>TO WS-ACCEPT-PROGRAM
 
                EVALUATE WS-ACCEPT-PROGRAM
 
@@ -43,6 +45,9 @@
                            WS-REPORT-CNBV-DF-NAME
                            b
                      END-CALL
+
+                  WHEN 1
+                     STOP RUN
 
                END-EVALUATE
 

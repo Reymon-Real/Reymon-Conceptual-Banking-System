@@ -5,22 +5,10 @@
       * ### Lizenz: MIT             ###
       * ###############################
 
-           SELECT OPTIONAL TRANSACTION-DATA-FILE
+           SELECT OPTIONAL BANK-DF
            ASSIGN TO "bank.db", *> Book Transaction Database
            ORGANIZATION IS INDEXED
            ACCESS IS RANDOM
-           RECORD KEY IS KSDS-TRNC-ID
-           
-           ALTERNATE RECORD KEY IS KSDS-TRNC-COUNTRY-ORIGIN  *> Country id
-           ALTERNATE RECORD KEY IS KSDS-TRNC-COUNTRY-RECEIVE *> Country id
-           
-           ALTERNATE RECORD KEY IS KSDS-TRNC-BANK-ORIGIN     *> fiscal id
-           ALTERNATE RECORD KEY IS KSDS-TRNC-BANK-RECEIVE    *> fiscal id
-           
-           ALTERNATE RECORD KEY IS KSDS-TRNC-ACCOUNT-NUMBER-ORIGIN
-           ALTERNATE RECORD KEY IS KSDS-TRNC-ACCOUNT-NUMBER-RECEIVE
-
-           ALTERNATE RECORD KEY IS KSDS-TRNC-CURRENCY
-           ALTERNATE RECORD KEY IS KSDS-TRNC-DATE-FORMAT
-           
-           FILE STATUS IS WS-TRNC-BANK-FILE-STATUS.
+           RECORD KEY IS LK-BANK-FISCAL-ID
+           ALTERNATE RECORD KEY IS LK-BANK-COUNTRY
+           FILE STATUS IS WS-RCBS-BANK-FST.

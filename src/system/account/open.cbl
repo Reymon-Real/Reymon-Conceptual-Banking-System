@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_account_open IS INITIAL.
+       PROGRAM-ID. rcbs_account_open IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 17. August. 2026
@@ -21,26 +21,23 @@
        FILE SECTION.
        COPY "account/fs.cpy".
 
-       WORKING-STORAGE SECTION.
+       LOCAL-STORAGE SECTION.
        COPY "account/ws.cpy".
-
-       LINKAGE SECTION.
-       COPY "account/ls.cpy".
       *****************************************************************
 
       *****************************************************************
        PROCEDURE DIVISION.
 
-           OPEN I-O RCBS-ACCOUNT-DF.
+           OPEN I-O ACCOUNT-DF.
 
-           IF WS-RCBS-ACCOUNT-FST EQUAL "00"
+           IF WS-ACCOUNT-FST EQUAL "00"
            
-              CLOSE RCBS-ACCOUNT-DF
+              CLOSE ACCOUNT-DF
            
            ELSE
            
-              OPEN OUTPUT RCBS-ACCOUNT-DF
-              CLOSE RCBS-ACCOUNT-DF
+              OPEN OUTPUT ACCOUNT-DF
+              CLOSE ACCOUNT-DF
            
            END-IF.
 
