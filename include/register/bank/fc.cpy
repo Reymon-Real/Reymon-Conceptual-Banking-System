@@ -5,10 +5,11 @@
       * ### Lizenz: MIT             ###
       * ###############################
 
-           SELECT OPTIONAL BANK-DF
-           ASSIGN TO "bank.db", *> Book Transaction Database
+           SELECT OPTIONAL REGISTER-BANK-DF
+           ASSIGN TO "test/register/bank.db"
            ORGANIZATION IS INDEXED
-           ACCESS IS RANDOM
-           RECORD KEY IS LK-BANK-FISCAL-ID
-           ALTERNATE RECORD KEY IS LK-BANK-COUNTRY
-           FILE STATUS IS WS-RCBS-BANK-FST.
+           ACCESS IS DYNAMIC
+           RECORD KEY IS RK-REGISTER-BANK-FID
+           ALTERNATE RECORD KEY IS ARK-REGISTER-BANK-COUNTRY
+           ALTERNATE RECORD KEY IS ARK-REGISTER-BANK-NAME
+           FILE STATUS IS WS-REGISTER-BANK-FST.

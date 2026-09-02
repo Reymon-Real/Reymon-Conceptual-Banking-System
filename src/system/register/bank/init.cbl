@@ -1,8 +1,8 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_account_open IS RECURSIVE.
+       PROGRAM-ID. rcbs_register_bank_init IS RECURSIVE.
        AUTHOR. Reymon Dev.
-       DATE-WRITTEN.  18. April. 2026
+       DATE-WRITTEN.  16. August. 2026
        DATE-COMPILED. 17. August. 2026
       *****************************************************************
 
@@ -10,47 +10,30 @@
        ENVIRONMENT DIVISION.
 
        INPUT-OUTPUT SECTION.
-
        FILE-CONTROL.
-       COPY "account/fc.cpy".
+       COPY "register/bank/fc.cpy".
       *****************************************************************
 
       *****************************************************************
        DATA DIVISION.
 
        FILE SECTION.
-       COPY "account/fs.cpy".
+       COPY "register/bank/fs.cpy".
 
        LOCAL-STORAGE SECTION.
-       COPY "account/ws.cpy".
+       COPY "register/bank/ws.cpy".
 
-       LINKAGE SECTION.
-       COPY "account/lk.cpy".
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION USING LK-ACCOUNT LK-ACCOUNT-DF-NAME.
+       PROCEDURE DIVISION.
 
-           OPEN I-O ACCOUNT-DF.
+           OPEN I-O REGISTER-BANK-DF.
 
-           MOVE HIGH-VALUES TO RK-ACCOUNT-NUMBER.
+           IF WS-REGISTER-BANK-FST NOT EQUAL TO "00"
+            OPEN OUTPUT REGISTER-BANK-DF.
 
-           START ACCOUNT-DF KEY IS LESS THAN RK-ACCOUNT-NUMBER
-              INVALID KEY CONTINUE
-           END-START.
-
-           READ ACCOUNT-DF KEY IS RK-ACCOUNT-NUMBER
-              INVALID KEY
-                MOVE ZERO TO RK-ACCOUNT-NUMBER
-
-              NOT INVALID KEY
-                ADD 1 TO RK-ACCOUNT-NUMBER
-                
-           END-READ.
-           
-           WRITE FS-ACCOUNT FROM LK-ACCOUNT.
-
-           CLOSE ACCOUNT-DF.
+           CLOSE REGISTER-BANK-DF.
 
            GOBACK.
       *****************************************************************

@@ -18,42 +18,161 @@
        COPY "register/bank/ws.cpy".
        COPY "report/cnbv/R01/A0111/ws.cpy".
        
-       01 WS-ACCEPT-PROGRAM PIC X(04)  VALUE SPACES.
-          88 ACCEPT-CREATE-REPORT-CNBV VALUE "CNBV".
-          88 ACCEPT-EXIT               VALUE "EXIT".
+       01 WS-CREATE PIC A(10)  VALUE SPACES.
+          88 WS-CREATE-BANK    VALUE "BANK".
+          88 WS-CREATE-ACCOUNT VALUE "ACCOUNT".
+
+       01 WS-DELETE PIC A(10) VALUE SPACES.
+          88 WS-DELETE-BANK    VALUE "BANK".
+          88 WS-DELETE-ACCOUNT VALUE "ACCOUNT".
+
+       01 WS-OPERATION PIC A(08)   VALUE SPACES.
+          88 WS-OPERATION-CREATE   VALUE "CREATE".
+          88 WS-OPERATION-DELETE   VALUE "DELETE".
+          88 WS-OPERATION-DEPOSIT  VALUE "DEPOSIT".
+          88 WS-OPERATION-TRANSFER VALUE "TRANSFER". 
+          88 WS-OPERATION-WITHDRAW VALUE "WITHDRAW".
+          88 WS-OPERATION-EXIT     VALUE "EXIT".
        
        77 b pic X(001) display.
+       77 c pic x(002) display.
 
-       77 UBS-ACCOUNT-PEOPLE PIC X(255)
+       77 UBS-ACCOUNT-DF-PEOPLE PIC X(255)
             VALUE "test/UBS/account/people.db".
       *****************************************************************
 
       *****************************************************************
        PROCEDURE DIVISION.
-       MAIN-CONTROL.
 
-           PERFORM INIT-PROGRAM.
+           CALL "rcbs_account_init" USING UBS-ACCOUNT-DF-PEOPLE.
+           CALL "rcbs_register_bank_init".
 
-           PERFORM UNTIL WS-ACCEPT-PROGRAM EQUAL "EXIT"
+           PERFORM UNTIL WS-OPERATION-EXIT
 
-               ACCEPT WS-ACCEPT-PROGRAM
+               DISPLAY "Enter de option"
+               DISPLAY "* Create"
+               DISPLAY "* Delete"
+               DISPLAY "* Deposit"
+               DISPLAY "* Transfer"
+               DISPLAY "* Withdraw"
+               DISPLAY "* Exit"
 
-               *>MOVE FUNCTION UPPER-CASE(WS-ACCEPT-PROGRAM)
-               *>TO WS-ACCEPT-PROGRAM
+               DISPLAY SPACE
+               DISPLAY "RCBS> " WITH NO ADVANCING
+
+               ACCEPT WS-OPERATION
+               MOVE FUNCTION UPPER-CASE(WS-OPERATION) TO WS-OPERATION
+
+               DISPLAY SPACE
 
                EVALUATE TRUE
+                
+                *>*****************************************************
+                  WHEN WS-OPERATION-CREATE
 
-                  WHEN ACCEPT-CREATE-REPORT-CNBV
-                     CALL "rcbs_report_cnbv_R01_A0111"
-                        USING
-                           WS-REPORT-CNBV-DF-NAME
-                           b
-                     END-CALL
+                    DISPLAY SPACE
 
+                    DISPLAY "Select Option"
+                    DISPLAY "* Bank"
+                    DISPLAY "* Account"
+                    
+                    DISPLAY SPACE
+                    DISPLAY "RCBS> " WITH NO ADVANCING
+                    
+                    ACCEPT WS-CREATE
+                    MOVE FUNCTION UPPER-CASE(WS-CREATE) TO WS-CREATE
+                    
+                    DISPLAY SPACE
+
+                    EVALUATE TRUE
+
+                    WHEN WS-CREATE-BANK
+
+                      DISPLAY
+                        "RCBS> Country of the bank: "
+                        WITH NO ADVANCING
+                      END-DISPLAY
+
+                    ACCEPT WS-REGISTER-BANK-COUNTRY
+
+                    DISPLAY
+                      "RCBS> Enter Fiscal ID of the bank: "
+                        WITH NO ADVANCING
+                    END-DISPLAY
+
+                    ACCEPT WS-REGISTER-BANK-FID
+
+                    DISPLAY
+                      "RCBS> Enter the bank name: "
+                      WITH NO ADVANCING
+                    END-DISPLAY
+
+                    ACCEPT WS-REGISTER-BANK-NAME
+
+                    CALL "rcbs_register_bank_create"
+                      USING WS-REGISTER-BANK
+                    END-CALL
+
+                    END-EVALUATE
+
+                    DISPLAY SPACE
+
+                *>*****************************************************
+                  WHEN WS-OPERATION-DELETE
+
+                    DISPLAY SPACE
+
+                    DISPLAY "Select the option"
+                    DISPLAY "* Bank"
+                    DISPLAY "* Account"
+                    
+                    DISPLAY SPACE
+                    DISPLAY "RCBS> " WITH NO ADVANCING
+                    
+                    ACCEPT WS-DELETE
+                    MOVE FUNCTION UPPER-CASE(WS-DELETE) TO WS-DELETE
+                    
+                    DISPLAY SPACE
+
+                    EVALUATE TRUE
+
+                      WHEN WS-DELETE-BANK
+
+                        DISPLAY
+                          "RCBS> Enter Fiscal ID of the bank: "
+                          WITH NO ADVANCING
+                        END-DISPLAY
+
+                        ACCEPT WS-REGISTER-BANK-FID
+
+                        CALL "rcbs_register_bank_delete"
+                          USING WS-REGISTER-BANK
+                        END-CALL
+
+                *>*****************************************************
+                  WHEN WS-OPERATION-DEPOSIT
+
+                    DISPLAY "Deposit"
+                    DISPLAY SPACE
+
+                *>*****************************************************
+                  WHEN WS-OPERATION-TRANSFER
+
+                    DISPLAY "Transfer"
+                    DISPLAY SPACE
+
+                *>*****************************************************
+                  WHEN WS-OPERATION-WITHDRAW
+
+                    DISPLAY "Withdraw"
+                    DISPLAY SPACE
+
+                *>*****************************************************
                   WHEN OTHER
 
-                     IF NOT ACCEPT-EXIT
-                        DISPLAY "Unrecognized Operation"
+                     IF NOT WS-OPERATION-EXIT
+                        DISPLAY "Unrecognized Operation: " WS-OPERATION
+                        DISPLAY SPACE
                      END-IF
 
                END-EVALUATE
@@ -61,10 +180,4 @@
            END-PERFORM.
            
            STOP RUN.
-
-       INIT-PROGRAM.
-           CALL "rcbs_account_open" USING UBS-ACCOUNT-PEOPLE.
-
-           MOVE "test/cnbv/report_" TO WS-REPORT-CNBV-DF-FILE.
-           MOVE "_.txt"             TO WS-REPORT-CNBV-DF-EXTENSION.
       *****************************************************************

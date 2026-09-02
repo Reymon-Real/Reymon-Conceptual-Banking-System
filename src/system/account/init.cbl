@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_account_open IS RECURSIVE.
+       PROGRAM-ID. rcbs_account_init IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  18. April. 2026
        DATE-COMPILED. 17. August. 2026
@@ -29,26 +29,12 @@
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION USING LK-ACCOUNT LK-ACCOUNT-DF-NAME.
+       PROCEDURE DIVISION USING LK-ACCOUNT-DF-NAME.
 
            OPEN I-O ACCOUNT-DF.
 
-           MOVE HIGH-VALUES TO RK-ACCOUNT-NUMBER.
-
-           START ACCOUNT-DF KEY IS LESS THAN RK-ACCOUNT-NUMBER
-              INVALID KEY CONTINUE
-           END-START.
-
-           READ ACCOUNT-DF KEY IS RK-ACCOUNT-NUMBER
-              INVALID KEY
-                MOVE ZERO TO RK-ACCOUNT-NUMBER
-
-              NOT INVALID KEY
-                ADD 1 TO RK-ACCOUNT-NUMBER
-                
-           END-READ.
-           
-           WRITE FS-ACCOUNT FROM LK-ACCOUNT.
+           IF WS-ACCOUNT-FST NOT EQUAL TO "00"
+              OPEN OUTPUT ACCOUNT-DF.
 
            CLOSE ACCOUNT-DF.
 

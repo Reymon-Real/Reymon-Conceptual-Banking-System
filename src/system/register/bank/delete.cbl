@@ -1,6 +1,6 @@
       *****************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. rcbs_register_bank_create IS RECURSIVE.
+       PROGRAM-ID. rcbs_register_bank_delete IS RECURSIVE.
        AUTHOR. Reymon Dev.
        DATE-WRITTEN.  16. August. 2026
        DATE-COMPILED. 17. August. 2026
@@ -11,21 +11,35 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
+       COPY "register/bank/fc.cpy".
       *****************************************************************
 
       *****************************************************************
        DATA DIVISION.
 
        FILE SECTION.
+       COPY "register/bank/fs.cpy".
 
        LOCAL-STORAGE SECTION.
+       COPY "register/bank/ws.cpy".
 
        LINKAGE SECTION.
+       COPY "register/bank/lk.cpy".
 
       *****************************************************************
 
       *****************************************************************
-       PROCEDURE DIVISION.
+       PROCEDURE DIVISION USING BY REFERENCE LK-REGISTER-BANK.
+
+           OPEN I-O REGISTER-BANK-DF.
+
+           MOVE LK-REGISTER-BANK TO FS-REGISTER-BANK.
+
+           DELETE REGISTER-BANK-DF
+              INVALID KEY CONTINUE
+              NOT INVALID KEY CONTINUE.
+
+           CLOSE REGISTER-BANK-DF.
 
            GOBACK.
       *****************************************************************

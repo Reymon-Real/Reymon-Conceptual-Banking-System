@@ -24,7 +24,7 @@
        COPY "report/cnbv/R01/A0111/ws.cpy".
 
        LINKAGE SECTION.
-       01 LS-FILE-STATUS PIC X(02) DISPLAY.
+       01 LK-FILE-STATUS PIC X(02) DISPLAY.
        COPY "report/cnbv/R01/A0111/ls.cpy".
 
       *****************************************************************
@@ -32,7 +32,7 @@
       *****************************************************************
        PROCEDURE DIVISION
           USING LS-REPORT-CNBV-NAME-DF LS-REPORT-CNBV-R01-A-0111
-          RETURNING LS-FILE-STATUS.
+          RETURNING LK-FILE-STATUS.
 
            MOVE WS-REPORT-CNBV-DF-NUMBER TO LS-REPORT-CNBV-DF-NUMBER.
            MOVE LS-REPORT-CNBV-R01-A-0111 TO REPORT-CNBV-R01-A-0111.
@@ -42,7 +42,7 @@
            CLOSE REPORT-CNBV-R01-A-0111-DF.
 
            ADD 1 TO WS-REPORT-CNBV-DF-NUMBER.
-           MOVE WS-REPORT-CNBV-R01-A-0111-FST TO LS-FILE-STATUS.
+           MOVE WS-REPORT-CNBV-R01-A-0111-FST TO LK-FILE-STATUS.
 
            GOBACK.
       *****************************************************************

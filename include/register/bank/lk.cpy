@@ -6,7 +6,8 @@
       * ###################################
 
       *****************************************************************
-       01 LK-BANK.
-          02 LK-BANK-FISCAL-ID PIC 9(18) COMP-5.
-          02 LK-BANK-COUNTRY   PIC A(02) DISPLAY.
+       01 LK-REGISTER-BANK.
+          02 LK-REGISTER-BANK-FID     PIC X(18)  DISPLAY.
+          02 LK-REGISTER-BANK-COUNTRY PIC A(02)  DISPLAY.
+          02 LK-REGISTER-BANK-NAME    PIC X(255) DISPLAY.
       *****************************************************************
